@@ -1,6 +1,4 @@
-Here is a well-organized table that breaks down the API tests for the MarketSquare Supermarket app. The table includes the HTTP method, API endpoint, role access (Admin, Customer, or Both), and a list of test cases for each endpoint.
-
-API Test Cases Table
+API Test Cases
 
 HTTP Method	Endpoint	Access	Test Cases
 POST	/api/auth/login	Both	- Should log in with valid credentials (admin or customer) - Should fail with invalid username/password
@@ -37,8 +35,3 @@ Additional Tests:
 	•	Error Handling: Test edge cases (e.g., product not found, insufficient stock, etc.).
 	•	Pagination and Filtering: Test APIs that return lists of products or orders for correct pagination and filtering logic.
 
-Final Notes:
-
-This table provides a clear structure for writing and organizing your API tests. Each API endpoint has its role-specific access rules and test cases that you can implement with a testing framework like Jest, Mocha, or Supertest.
-
-If you need help writing specific test cases or integrating these tests with your backend, feel free to ask!
