@@ -1,7 +1,9 @@
+const jwt = require("jsonwebtoken");
 const {
   findUserByUsername,
   verifyPassword,
   postRegisteredUser,
+  fetchUserData,
 } = require("../models/auth.model");
 
 exports.loginUser = (req, res, next) => {
@@ -10,8 +12,13 @@ exports.loginUser = (req, res, next) => {
   findUserByUsername(username)
     .then((user) => {
       return verifyPassword(password, user.password).then(() => {
+        const token = jwt.sign(
+          { user_id: user.user_id, username: user.username, role: user.role },
+          process.env.JWT_SECRET,
+          { expiresIn: "1h" }
+        );
         delete user.password;
-        return res.status(200).send(user);
+        res.status(200).send({ user, token });
       });
     })
     .catch((err) => {
@@ -47,6 +54,19 @@ exports.registerUser = (req, res, next) => {
     .then((user) => {
       delete user.password;
       return res.status(200).send(user);
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+exports.getUser = (req, res, next) => {
+  const { user_id } = req.user;
+
+  fetchUserData(user_id)
+    .then((userData) => {
+      delete userData.password;
+      return res.status(200).send(userData);
     })
     .catch((err) => {
       next(err);

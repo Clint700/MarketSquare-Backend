@@ -1,5 +1,5 @@
 const bcrypt = require("bcrypt");
-const db = require("../db/connection");
+const db = require("../../db/connection");
 
 exports.findUserByUsername = (username) => {
   return db
@@ -61,4 +61,9 @@ exports.postRegisteredUser = (
       delete newUser.password;
       return newUser;
     });
+};
+
+exports.fetchUserData = (userId) => {
+  return db.query("SELECT * FROM users WHERE user_id = $1", [userId])
+    .then(({ rows }) => rows[0]);
 };
