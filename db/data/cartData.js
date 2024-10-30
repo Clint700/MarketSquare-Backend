@@ -10,7 +10,7 @@ module.exports = [
       quantity: 2
     },
     {
-      user_id: 4,  
+      user_id: 2,  
       product_id: 4,  
       quantity: 1
     }

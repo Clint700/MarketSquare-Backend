@@ -6,7 +6,7 @@ module.exports = [
       created_at: new Date()
     },
     {
-      user_id: 4, 
+      user_id: 2, 
       total_amount: '99.99',
       status: 'shipped',
       created_at: new Date()

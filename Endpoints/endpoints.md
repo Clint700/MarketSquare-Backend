@@ -34,4 +34,3 @@ Additional Tests:
 	•	Authorization Tests: Ensure customers cannot access admin routes, and vice versa.
 	•	Error Handling: Test edge cases (e.g., product not found, insufficient stock, etc.).
 	•	Pagination and Filtering: Test APIs that return lists of products or orders for correct pagination and filtering logic.
-
