@@ -1,5 +1,5 @@
 const request = require("supertest");
-const app = require("../app.js");
+const app = require("../apps/app.js");
 const db = require("../db/connection.js");
 const seed = require("../db/seeds/seed.js");
 const jwt = require("jsonwebtoken");
