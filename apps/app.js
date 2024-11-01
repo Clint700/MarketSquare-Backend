@@ -10,7 +10,11 @@ const apiRoutes = require("../src/Routes/endpoint.routes")
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin: ['http://localhost:3000', 'https://marketsquare-backend-6yy4.onrender.com'],
+  methods: ['GET', 'POST', 'PATCH', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+}));
 app.use(express.json());
 
 app.use("/api", apiRoutes);
