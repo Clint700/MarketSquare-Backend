@@ -100,12 +100,16 @@ describe("/api/auth", () => {
       .then((response) => {
         expect(response.body).toEqual(
           expect.objectContaining({
-            username: "adminFrank",
-            first_name: "Frank",
-            last_name: "Admin",
-            email: "admin.Frank@example.com",
-            number: "1234567890",
-            role: "admin",
+            user: {
+              user_id: expect.any(Number),
+              username: "adminFrank",
+              first_name: "Frank",
+              last_name: "Admin",
+              email: "admin.Frank@example.com",
+              number: "1234567890",
+              role: "admin",
+            },
+            token: expect.any(String),
           })
         );
       });
@@ -153,7 +157,7 @@ describe("/api/auth", () => {
       .get("/api/auth/me")
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
-      .then(({body}) => {
+      .then(({ body }) => {
         expect(body).toEqual(
           expect.objectContaining({
             username: "adminJohn",

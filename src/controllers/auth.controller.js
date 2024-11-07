@@ -52,8 +52,13 @@ exports.registerUser = (req, res, next) => {
     role
   )
     .then((user) => {
+      const token = jwt.sign(
+        { user_id: user.user_id, username: user.username, role: user.role },
+        process.env.JWT_SECRET,
+        { expiresIn: "1h" }
+      );
       delete user.password;
-      return res.status(200).send(user);
+      return res.status(200).send({ user, token });
     })
     .catch((err) => {
       next(err);
