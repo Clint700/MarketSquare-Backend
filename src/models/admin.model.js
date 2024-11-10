@@ -18,6 +18,21 @@ exports.fetchAllOrders = (status) => {
     });
 };
 
+exports.fetchOrder = (order_id) => {
+  return db
+    .query("SELECT * FROM orders WHERE order_id = $1", [order_id])
+    .then(({ rows }) => {
+      if (!rows[0]) {
+        return Promise.reject({ status: 404, msg: "Order not found" });
+      }
+      return rows[0];
+    })
+    .catch((err) => {
+      console.error("Error fetching orders:", err);
+      throw err;
+    });
+};
+
 exports.updateOrderStatus = (order_id, newStatus) => {
   return db
     .query("UPDATE orders SET status = $1 WHERE order_id = $2 RETURNING *", [
@@ -35,7 +50,6 @@ exports.updateOrderStatus = (order_id, newStatus) => {
 exports.fetchAllProducts = () => {
   return db.query("SELECT * FROM items").then(({ rows }) => rows);
 };
-
 
 exports.fetchAllCustomers = () => {
   return db

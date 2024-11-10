@@ -3,12 +3,23 @@ const {
   updateOrderStatus,
   fetchAllProducts,
   fetchAllCustomers,
+  fetchOrder,
 } = require("../models/admin.model");
 
 exports.getAllOrders = (req, res, next) => {
   const { status } = req.query;
   fetchAllOrders(status)
     .then((orders) => res.status(200).send(orders))
+    .catch((err) => {
+      console.error("Error in getAllOrders controller:", err);
+      next(err);
+    });
+};
+
+exports.getSpecificOrder = (req, res, next) => {
+  const { order_id } = req.params;
+  fetchOrder(order_id)
+    .then((order) => res.status(200).send(order))
     .catch((err) => {
       console.error("Error in getAllOrders controller:", err);
       next(err);

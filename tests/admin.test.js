@@ -61,6 +61,46 @@ describe("/api/admin", () => {
           });
       });
     });
+
+    describe("GET /api/admin/orders/:order_id", () => {
+      test("Should return details of a specific order for admin", () => {
+        return request(app)
+          .get("/api/admin/orders/1")
+          .set("role", "admin")
+          .expect(200)
+          .then(({ body }) => {
+            expect(body).toEqual(
+              expect.objectContaining({
+                order_id: 1,
+                user_id: expect.any(Number),
+                total_amount: expect.any(String),
+                status: expect.any(String),
+                created_at: expect.any(String),
+              })
+            );
+          });
+      });
+  
+      test("Should return 404 if specific order does not exist", () => {
+        return request(app)
+          .get("/api/admin/orders/9999") 
+          .set("role", "admin")
+          .expect(404)
+          .then(({ body }) => {
+            expect(body.msg).toBe("Order not found");
+          });
+      });
+  
+      test("Should deny access to specific order for non-admin", () => {
+        return request(app)
+          .get("/api/admin/orders/1")
+          .set("role", "customer")
+          .expect(403)
+          .then(({ body }) => {
+            expect(body.msg).toBe("Admin access only");
+          });
+      });
+    });
   
     describe("PATCH /api/admin/orders/:order_id", () => {
       test("Should allow admin to update order status", () => {
