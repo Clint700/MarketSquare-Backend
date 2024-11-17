@@ -42,10 +42,10 @@ exports.postRegisteredUser = (
       email,
     ])
     .then(({ rows }) => {
-      if (rows.length !== 0) {
+      if (rows.length > 0) {
         return Promise.reject({
           status: 409,
-          msg: "username or email exists! Please login",
+          msg: "Username or email already exists! Please log in.",
         });
       }
       return bcrypt.hash(password, 10);
@@ -57,13 +57,17 @@ exports.postRegisteredUser = (
       );
     })
     .then(({ rows }) => {
-      const newUser = rows[0];
-      delete newUser.password;
-      return newUser;
+      return rows[0];
     });
 };
 
 exports.fetchUserData = (userId) => {
-  return db.query("SELECT * FROM users WHERE user_id = $1", [userId])
-    .then(({ rows }) => rows[0]);
+  return db
+    .query("SELECT * FROM users WHERE user_id = $1", [userId])
+    .then(({ rows }) => {
+      if (rows.length === 0) {
+        return Promise.reject({ status: 404, msg: "User not found" });
+      }
+      return rows[0];
+    });
 };

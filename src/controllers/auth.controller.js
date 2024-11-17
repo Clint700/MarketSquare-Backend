@@ -17,13 +17,11 @@ exports.loginUser = (req, res, next) => {
           process.env.JWT_SECRET,
           { expiresIn: "1h" }
         );
-        delete user.password;
+        delete user.password; // Remove sensitive data
         res.status(200).send({ user, token });
       });
     })
-    .catch((err) => {
-      next(err);
-    });
+    .catch(next); // Pass errors to global error handler
 };
 
 exports.registerUser = (req, res, next) => {
@@ -57,12 +55,10 @@ exports.registerUser = (req, res, next) => {
         process.env.JWT_SECRET,
         { expiresIn: "1h" }
       );
-      delete user.password;
+      delete user.password; // Remove sensitive data
       return res.status(200).send({ user, token });
     })
-    .catch((err) => {
-      next(err);
-    });
+    .catch(next); // Pass errors to global error handler
 };
 
 exports.getUser = (req, res, next) => {
@@ -70,10 +66,11 @@ exports.getUser = (req, res, next) => {
 
   fetchUserData(user_id)
     .then((userData) => {
-      delete userData.password;
+      if (!userData) {
+        return res.status(404).send({ msg: "User not found" });
+      }
+      delete userData.password; // Remove sensitive data
       return res.status(200).send(userData);
     })
-    .catch((err) => {
-      next(err);
-    });
+    .catch(next); // Pass errors to global error handler
 };
