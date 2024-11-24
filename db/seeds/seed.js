@@ -11,9 +11,9 @@ const hashPassword = (password) => {
   });
 };
 
-const seed = ({ userData, itemsData, cartData, ordersData }) => {
+const seed = ({ userData, itemsData, ordersData }) => {
   return db
-    .query(`DROP TABLE IF EXISTS carts, orders, items, users;`)
+    .query(`DROP TABLE IF EXISTS orders, items, users;`)
     .then(() => {
       return db.query(`
         CREATE TABLE users (
@@ -24,7 +24,9 @@ const seed = ({ userData, itemsData, cartData, ordersData }) => {
           last_name VARCHAR(20) NOT NULL,
           email VARCHAR(100) NOT NULL,
           number VARCHAR(20) NOT NULL,
-          role VARCHAR(10) NOT NULL
+          role VARCHAR(10) NOT NULL,
+          address JSON NOT NULL,
+          preferences JSON NOT NULL
         );
       `);
     })
@@ -36,19 +38,12 @@ const seed = ({ userData, itemsData, cartData, ordersData }) => {
           img_url VARCHAR NOT NULL,
           created_at TIMESTAMP DEFAULT NOW(),
           price VARCHAR NOT NULL,
+          stock INT NOT NULL,
           category VARCHAR NOT NULL,
           item_name VARCHAR NOT NULL,
-          item_description VARCHAR NOT NULL
-        );
-      `);
-    })
-    .then(() => {
-      return db.query(`
-        CREATE TABLE carts (
-          cart_id SERIAL PRIMARY KEY,
-          user_id INT REFERENCES users(user_id),
-          product_id INT REFERENCES items(item_id),
-          quantity INT NOT NULL
+          item_description VARCHAR NOT NULL,
+          dimensions JSON NOT NULL,
+          rating FLOAT
         );
       `);
     })
@@ -57,9 +52,17 @@ const seed = ({ userData, itemsData, cartData, ordersData }) => {
         CREATE TABLE orders (
           order_id SERIAL PRIMARY KEY,
           user_id INT REFERENCES users(user_id),
+          full_name VARCHAR(100) NOT NULL,
+          items JSON NOT NULL,
           total_amount VARCHAR NOT NULL,
+          tax FLOAT NOT NULL,
+          shipping_cost FLOAT NOT NULL,
           status VARCHAR(20) NOT NULL,
-          created_at TIMESTAMP DEFAULT NOW()
+          payment_status VARCHAR(20) NOT NULL,
+          shipping_address JSON NOT NULL,
+          billing_address JSON NOT NULL,
+          created_at TIMESTAMP DEFAULT NOW(),
+          updated_at TIMESTAMP DEFAULT NOW()
         );
       `);
     })
@@ -75,9 +78,9 @@ const seed = ({ userData, itemsData, cartData, ordersData }) => {
     })
     .then((hashedUserData) => {
       const insertUsersQueryStr = format(
-        "INSERT INTO users (username, password, first_name, last_name, email, number, role) VALUES %L;",
+        `INSERT INTO users (username, password, first_name, last_name, email, number, role, address, preferences) VALUES %L;`,
         hashedUserData.map(
-          ({ username, password, first_name, last_name, email, number, role }) => [
+          ({
             username,
             password,
             first_name,
@@ -85,6 +88,18 @@ const seed = ({ userData, itemsData, cartData, ordersData }) => {
             email,
             number,
             role,
+            address,
+            preferences,
+          }) => [
+            username,
+            password,
+            first_name,
+            last_name,
+            email,
+            number,
+            role,
+            address,
+            preferences,
           ]
         )
       );
@@ -92,41 +107,67 @@ const seed = ({ userData, itemsData, cartData, ordersData }) => {
     })
     .then(() => {
       const insertItemsQueryStr = format(
-        "INSERT INTO items (user_id, img_url, created_at, price, category, item_name, item_description) VALUES %L;",
+        `INSERT INTO items (user_id, img_url, created_at, price, stock, category, item_name, item_description, dimensions, rating) VALUES %L;`,
         itemsData.map(
-          ({ user_id, img_url, created_at, price, category, item_name, item_description }) => [
+          ({
             user_id,
             img_url,
             created_at,
             price,
+            stock,
             category,
             item_name,
             item_description,
+            dimensions,
+            rating,
+          }) => [
+            user_id,
+            img_url,
+            created_at,
+            price,
+            stock,
+            category,
+            item_name,
+            item_description,
+            dimensions,
+            rating,
           ]
         )
       );
       return db.query(insertItemsQueryStr);
     })
     .then(() => {
-      const insertCartsQueryStr = format(
-        "INSERT INTO carts (user_id, product_id, quantity) VALUES %L;",
-        cartData.map(({ user_id, product_id, quantity }) => [
-          user_id,
-          product_id,
-          quantity,
-        ])
-      );
-      return db.query(insertCartsQueryStr);
-    })
-    .then(() => {
       const insertOrdersQueryStr = format(
-        "INSERT INTO orders (user_id, total_amount, status, created_at) VALUES %L;",
-        ordersData.map(({ user_id, total_amount, status, created_at }) => [
-          user_id,
-          total_amount,
-          status,
-          created_at,
-        ])
+        `INSERT INTO orders (user_id, full_name, items, total_amount, tax, shipping_cost, status, payment_status, shipping_address, billing_address, created_at, updated_at) VALUES %L;`,
+        ordersData.map(
+          ({
+            user_id,
+            full_name,
+            items,
+            total_amount,
+            tax,
+            shipping_cost,
+            status,
+            payment_status,
+            shipping_address,
+            billing_address,
+            created_at,
+            updated_at,
+          }) => [
+            user_id,
+            full_name,
+            items,
+            total_amount,
+            tax,
+            shipping_cost,
+            status,
+            payment_status,
+            shipping_address,
+            billing_address,
+            created_at,
+            updated_at,
+          ]
+        )
       );
       return db.query(insertOrdersQueryStr);
     })
