@@ -5,9 +5,12 @@ exports.AddItem = (
   img_url,
   created_at,
   price,
+  stock,
   category,
   item_name,
-  item_description
+  item_description,
+  dimensions,
+  rating
 ) => {
   return db
     .query("SELECT * FROM users WHERE user_id = $1", [user_id])
@@ -23,15 +26,18 @@ exports.AddItem = (
     .then(() => {
       return db
         .query(
-          "INSERT INTO items (user_id, img_url, created_at, price, category, item_name, item_description) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *",
+          "INSERT INTO items (user_id, img_url, created_at, price, stock, category, item_name, item_description, dimensions, rating) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *",
           [
             user_id,
             img_url,
             created_at,
             price,
+            stock,
             category,
             item_name,
             item_description,
+            dimensions,
+            rating,
           ]
         )
         .then(({ rows }) => {
@@ -41,14 +47,17 @@ exports.AddItem = (
 };
 
 exports.UpdateItem = (
-  item_id,
   user_id,
+  item_id,
   img_url,
   created_at,
   price,
+  stock,
   category,
   item_name,
-  item_description
+  item_description,
+  dimensions,
+  rating
 ) => {
   const fields = [];
   const values = [];
@@ -70,6 +79,10 @@ exports.UpdateItem = (
     fields.push(`price = $${index++}`);
     values.push(price);
   }
+  if (stock) {
+    fields.push(`stock = $${index++}`);
+    values.push(stock);
+  }
   if (category) {
     fields.push(`category = $${index++}`);
     values.push(category);
@@ -81,6 +94,14 @@ exports.UpdateItem = (
   if (item_description) {
     fields.push(`item_description = $${index++}`);
     values.push(item_description);
+  }
+  if (dimensions) {
+    fields.push(`dimensions = $${index++}`);
+    values.push(dimensions);
+  }
+  if (rating) {
+    fields.push(`rating = $${index++}`);
+    values.push(rating);
   }
 
   if (!fields.length) {

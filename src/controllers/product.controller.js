@@ -12,9 +12,12 @@ exports.postItem = (req, res, next) => {
     img_url,
     created_at,
     price,
+    stock,
     category,
     item_name,
     item_description,
+    dimensions,
+    rating,
   } = req.body;
 
   if (
@@ -22,9 +25,12 @@ exports.postItem = (req, res, next) => {
     !img_url ||
     !created_at ||
     !price ||
+    !stock ||
     !category ||
     !item_name ||
-    !item_description
+    !item_description ||
+    !dimensions ||
+    !rating
   ) {
     return res.status(400).send({ msg: "Please fill up empty fields" });
   }
@@ -33,9 +39,12 @@ exports.postItem = (req, res, next) => {
     img_url,
     created_at,
     price,
+    stock,
     category,
     item_name,
-    item_description
+    item_description,
+    dimensions,
+    rating
   )
     .then((item) => {
       return res.status(200).send(item);
@@ -46,25 +55,30 @@ exports.postItem = (req, res, next) => {
 };
 
 exports.patchItem = (req, res, next) => {
-  const { item_id } = req.params;
+  const { user_id, item_id } = req.params;
   const {
-    user_id,
     img_url,
     created_at,
     price,
+    stock,
     category,
     item_name,
     item_description,
+    dimensions,
+    rating,
   } = req.body;
   UpdateItem(
-    item_id,
     user_id,
+    item_id,
     img_url,
     created_at,
     price,
+    stock,
     category,
     item_name,
-    item_description
+    item_description,
+    dimensions,
+    rating
   )
     .then((item) => {
       res.status(200).send(item);

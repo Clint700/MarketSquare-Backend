@@ -9,13 +9,9 @@ exports.fetchAllOrders = (status) => {
     queryParams.push(status);
   }
 
-  return db
-    .query(queryStr, queryParams)
-    .then(({ rows }) => rows)
-    .catch((err) => {
-      console.error("Error fetching orders:", err);
-      throw err;
-    });
+  return db.query(queryStr, queryParams).then(({ rows }) => {
+    return rows;
+  });
 };
 
 exports.fetchOrder = (order_id) => {
@@ -26,19 +22,21 @@ exports.fetchOrder = (order_id) => {
         return Promise.reject({ status: 404, msg: "Order not found" });
       }
       return rows[0];
-    })
-    .catch((err) => {
-      console.error("Error fetching orders:", err);
-      throw err;
     });
 };
 
-exports.updateOrderStatus = (order_id, newStatus) => {
+exports.updateOrderStatus = (
+  order_id,
+  status,
+  payment_status,
+  shipping_cost,
+  updated_at = new Date()
+) => {
   return db
-    .query("UPDATE orders SET status = $1 WHERE order_id = $2 RETURNING *", [
-      newStatus,
-      order_id,
-    ])
+    .query(
+      "UPDATE orders SET status = $1, payment_status = $2, shipping_cost = $3, updated_at = $4 WHERE order_id = $5 RETURNING *",
+      [status, payment_status, shipping_cost, updated_at, order_id]
+    )
     .then(({ rows }) => {
       if (!rows.length) {
         return Promise.reject({ status: 404, msg: "Order not found" });
@@ -48,11 +46,15 @@ exports.updateOrderStatus = (order_id, newStatus) => {
 };
 
 exports.fetchAllProducts = () => {
-  return db.query("SELECT * FROM items").then(({ rows }) => rows);
+  return db.query("SELECT * FROM items").then(({ rows }) => {
+    return rows;
+  });
 };
 
 exports.fetchAllCustomers = () => {
   return db
     .query("SELECT * FROM users WHERE role = 'customer'")
-    .then(({ rows }) => rows);
+    .then(({ rows }) => {
+      return rows;
+    });
 };

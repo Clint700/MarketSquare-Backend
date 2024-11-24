@@ -1,6 +1,6 @@
 module.exports = [
   {
-    user_id: 2, // Jane Doe
+    user_id: 2,
     full_name: "Jane Doe",
     items: JSON.stringify([
       {
@@ -12,7 +12,6 @@ module.exports = [
       },
     ]),
     total_amount: 59.98,
-    tax: 5.0,
     shipping_cost: 10.0,
     status: "processing",
     payment_status: "paid",
@@ -34,7 +33,7 @@ module.exports = [
     updated_at: new Date(),
   },
   {
-    user_id: 3, // Alice Wong
+    user_id: 3,
     full_name: "Alice Wong",
     items: JSON.stringify([
       {
@@ -53,7 +52,6 @@ module.exports = [
       },
     ]),
     total_amount: 149.98,
-    tax: 12.5,
     shipping_cost: 15.0,
     status: "shipped",
     payment_status: "paid",
@@ -75,7 +73,7 @@ module.exports = [
     updated_at: new Date(),
   },
   {
-    user_id: 5, // Eve Taylor
+    user_id: 5, 
     full_name: "Eve Taylor",
     items: JSON.stringify([
       {
@@ -87,7 +85,6 @@ module.exports = [
       },
     ]),
     total_amount: 59.97,
-    tax: 4.8,
     shipping_cost: 8.0,
     status: "delivered",
     payment_status: "paid",
@@ -109,7 +106,7 @@ module.exports = [
     updated_at: new Date(),
   },
   {
-    user_id: 6, // Mike Brown
+    user_id: 6, 
     full_name: "Mike Brown",
     items: JSON.stringify([
       {
@@ -121,7 +118,6 @@ module.exports = [
       },
     ]),
     total_amount: 199.98,
-    tax: 16.0,
     shipping_cost: 12.0,
     status: "processing",
     payment_status: "pending",
@@ -143,7 +139,7 @@ module.exports = [
     updated_at: new Date(),
   },
   {
-    user_id: 8, // Liam Smith
+    user_id: 8, 
     full_name: "Liam Smith",
     items: JSON.stringify([
       {
@@ -155,7 +151,6 @@ module.exports = [
       },
     ]),
     total_amount: 79.99,
-    tax: 6.4,
     shipping_cost: 10.0,
     status: "shipped",
     payment_status: "paid",
@@ -177,7 +172,7 @@ module.exports = [
     updated_at: new Date(),
   },
   {
-    user_id: 10, // Olivia Jones
+    user_id: 10, 
     full_name: "Olivia Jones",
     items: JSON.stringify([
       {
@@ -189,7 +184,6 @@ module.exports = [
       },
     ]),
     total_amount: 31.98,
-    tax: 2.56,
     shipping_cost: 5.0,
     status: "processing",
     payment_status: "pending",
@@ -211,7 +205,7 @@ module.exports = [
     updated_at: new Date(),
   },
   {
-    user_id: 2, // Jane Doe
+    user_id: 2, 
     full_name: "Jane Doe",
     items: JSON.stringify([
       {
@@ -223,7 +217,6 @@ module.exports = [
       },
     ]),
     total_amount: 699.99,
-    tax: 56.0,
     shipping_cost: 20.0,
     status: "shipped",
     payment_status: "paid",
@@ -245,7 +238,7 @@ module.exports = [
     updated_at: new Date(),
   },
   {
-    user_id: 6, // Mike Brown
+    user_id: 6, 
     full_name: "Mike Brown",
     items: JSON.stringify([
       {
@@ -257,7 +250,6 @@ module.exports = [
       },
     ]),
     total_amount: 24.95,
-    tax: 2.0,
     shipping_cost: 3.5,
     status: "delivered",
     payment_status: "paid",
@@ -279,7 +271,7 @@ module.exports = [
     updated_at: new Date(),
   },
   {
-    user_id: 8, // Liam Smith
+    user_id: 8,
     full_name: "Liam Smith",
     items: JSON.stringify([
       {
@@ -291,7 +283,6 @@ module.exports = [
       },
     ]),
     total_amount: 99.98,
-    tax: 8.0,
     shipping_cost: 10.0,
     status: "processing",
     payment_status: "pending",

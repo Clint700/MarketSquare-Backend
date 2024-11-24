@@ -4,5 +4,5 @@ exports.verifyAdmin = (req, res, next) => {
   if (userRole !== "admin") {
     return res.status(403).send({ msg: "Admin access only" });
   }
-  next();
+  next(); 
 };

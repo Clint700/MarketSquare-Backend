@@ -17,16 +17,25 @@ exports.loginUser = (req, res, next) => {
           process.env.JWT_SECRET,
           { expiresIn: "1h" }
         );
-        delete user.password; // Remove sensitive data
+        delete user.password;
         res.status(200).send({ user, token });
       });
     })
-    .catch(next); // Pass errors to global error handler
+    .catch(next);
 };
 
 exports.registerUser = (req, res, next) => {
-  const { username, password, first_name, last_name, email, number, role } =
-    req.body;
+  const {
+    username,
+    password,
+    first_name,
+    last_name,
+    email,
+    number,
+    role,
+    address,
+    preferences,
+  } = req.body;
 
   if (
     !username ||
@@ -47,7 +56,9 @@ exports.registerUser = (req, res, next) => {
     last_name,
     email,
     number,
-    role
+    role,
+    address,
+    preferences
   )
     .then((user) => {
       const token = jwt.sign(
@@ -55,10 +66,10 @@ exports.registerUser = (req, res, next) => {
         process.env.JWT_SECRET,
         { expiresIn: "1h" }
       );
-      delete user.password; // Remove sensitive data
+      delete user.password;
       return res.status(200).send({ user, token });
     })
-    .catch(next); // Pass errors to global error handler
+    .catch(next);
 };
 
 exports.getUser = (req, res, next) => {
@@ -69,8 +80,8 @@ exports.getUser = (req, res, next) => {
       if (!userData) {
         return res.status(404).send({ msg: "User not found" });
       }
-      delete userData.password; // Remove sensitive data
+      delete userData.password;
       return res.status(200).send(userData);
     })
-    .catch(next); // Pass errors to global error handler
+    .catch(next);
 };

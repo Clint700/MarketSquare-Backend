@@ -34,7 +34,9 @@ exports.postRegisteredUser = (
   last_name,
   email,
   number,
-  role
+  role,
+  address,
+  preferences
 ) => {
   return db
     .query("SELECT * FROM users WHERE username = $1 OR email = $2", [
@@ -52,8 +54,18 @@ exports.postRegisteredUser = (
     })
     .then((hashedPassword) => {
       return db.query(
-        "INSERT INTO users (username, password, first_name, last_name, email, number, role) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *",
-        [username, hashedPassword, first_name, last_name, email, number, role]
+        "INSERT INTO users (username, password, first_name, last_name, email, number, role, address, preferences) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *",
+        [
+          username,
+          hashedPassword,
+          first_name,
+          last_name,
+          email,
+          number,
+          role,
+          address,
+          preferences,
+        ]
       );
     })
     .then(({ rows }) => {
@@ -61,9 +73,9 @@ exports.postRegisteredUser = (
     });
 };
 
-exports.fetchUserData = (userId) => {
+exports.fetchUserData = (user_id) => {
   return db
-    .query("SELECT * FROM users WHERE user_id = $1", [userId])
+    .query("SELECT * FROM users WHERE user_id = $1", [user_id])
     .then(({ rows }) => {
       if (rows.length === 0) {
         return Promise.reject({ status: 404, msg: "User not found" });

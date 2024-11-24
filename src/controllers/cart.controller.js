@@ -2,7 +2,7 @@ const {
   addItemToCart,
   fetchItemInCart,
   updateItemInCart,
-  removeItemInCart
+  removeItemInCart,
 } = require("../models/cart.model");
 
 exports.postItemToCart = (req, res, next) => {
@@ -36,11 +36,11 @@ exports.getItemToCart = (req, res, next) => {
 
 exports.patchItemToCart = (req, res, next) => {
   const { user_id, product_id } = req.params;
-  const { quantity } = req.body;
+  const { items, updated_at } = req.body;
 
-  updateItemInCart(user_id, product_id, quantity)
+  updateItemInCart(user_id, product_id, items, updated_at)
     .then((cart) => {
-      res.status(200).send(cart);
+      res.status(200).send({ ...cart, items: JSON.stringify(cart.items) });
     })
     .catch((err) => {
       next(err);
@@ -48,9 +48,9 @@ exports.patchItemToCart = (req, res, next) => {
 };
 
 exports.deleteItemToCart = (req, res, next) => {
-  const { user_id, product_id } = req.params;
+  const { user_id, cart_id } = req.params;
 
-  removeItemInCart(user_id, product_id)
+  removeItemInCart(user_id, cart_id)
     .then((response) => {
       res.status(200).send(response);
     })

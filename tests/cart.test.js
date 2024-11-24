@@ -19,20 +19,19 @@ afterAll(() => {
 
 describe("/api/cart", () => {
   test("POST /api/cart/user_id/product_id => Should add a product to the cart", () => {
-    const cartItem = {
-      quantity: 1,
-    };
+    const cartItem = { quantity: 100 };
     return request(app)
-      .post("/api/cart/3/2")
+      .post("/api/cart/5/3")
       .send(cartItem)
       .expect(201)
       .then(({ body }) => {
         expect(body).toEqual(
           expect.objectContaining({
-            cart_id: expect.any(Number),
-            user_id: 3,
-            product_id: 2,
-            quantity: 1,
+            user_id: 5,
+            full_name: "Eve Taylor",
+            items: expect.any(Object),
+            created_at: expect.any(String),
+            updated_at: expect.any(String),
           })
         );
       });
@@ -64,10 +63,10 @@ describe("/api/cart", () => {
 
   test("POST /api/cart/user_id/product_id => Should fail if product is out of stock", () => {
     const cartItem = {
-      quantity: 1,
+      quantity: 10000,
     };
     return request(app)
-      .post("/api/cart/3/20")
+      .post("/api/cart/5/3")
       .send(cartItem)
       .expect(400)
       .then(({ body }) => {
@@ -90,61 +89,54 @@ describe("/api/cart", () => {
 
   test("GET /api/cart/user_id Customer - Should return customers cart with products", () => {
     return request(app)
-      .get("/api/cart/3")
+      .get("/api/cart/6")
       .expect(200)
       .then(({ body }) => {
         expect(Array.isArray(body.items)).toBe(true);
         body.items.forEach((item) => {
           expect(item).toEqual(
             expect.objectContaining({
-              user_id: expect.any(Number),
-              product_id: expect.any(Number),
-              quantity: expect.any(Number),
+              user_id: 6,
+              full_name: "Mike Brown",
+              items: expect.any(Object),
+              created_at: expect.any(String),
+              updated_at: expect.any(String),
             })
           );
         });
       });
   });
 
-  test("GET /api/cart/:user_id => Should calculate total cost", () => {
-    return request(app)
-      .get("/api/cart/3")
-      .expect(200)
-      .then(({ body }) => {
-        expect(body).toEqual(
-          expect.objectContaining({
-            items: expect.any(Array),
-            totalCost: 119.96,
-          })
-        );
-        body.items.forEach((item) => {
-          expect(item).toEqual(
-            expect.objectContaining({
-              user_id: 3,
-              product_id: expect.any(Number),
-              quantity: expect.any(Number),
-              price: expect.any(String),
-            })
-          );
-        });
-      });
-  });
-
-  test("PATCH /api/cart/product_id => Should allow customer to update product quantity", () => {
+  test("PATCH /api/cart/user_id/product_id => Should allow customer to update product quantity", () => {
     const cartItem = {
-      quantity: 2,
+      items: ([
+        {
+          quantity: 4,
+        },
+      ]),
+      updated_at: new Date(),
     };
     return request(app)
-      .patch("/api/cart/3/3")
+      .patch("/api/cart/2/1")
       .send(cartItem)
       .expect(200)
       .then(({ body }) => {
         expect(body).toEqual(
           expect.objectContaining({
-            cart_id: expect.any(Number),
-            user_id: 3,
-            product_id: 3,
-            quantity: 2,
+            user_id: 2,
+            full_name: 'Jane Doe',
+            items: JSON.stringify([
+              {
+                item_id: 1,
+                item_name: 'Bluetooth Speaker',
+                price: 29.99,
+                quantity: 4,
+                total_price: 119.96,
+                product_image: 'https://example.com/img1.jpg'
+              }
+            ]),
+            created_at: expect.any(String),
+            updated_at: expect.any(String)
           })
         );
       });
@@ -152,10 +144,15 @@ describe("/api/cart", () => {
 
   test("PATCH /api/cart/product_id => Should fail if quantity exceeds stock", () => {
     const cartItem = {
-      quantity: 3,
+      items: ([
+        {
+          quantity: 4000,
+        },
+      ]),
+      updated_at: new Date(),
     };
     return request(app)
-      .patch("/api/cart/3/3")
+      .patch("/api/cart/2/1")
       .send(cartItem)
       .expect(400)
       .then(({ body }) => {
@@ -165,10 +162,15 @@ describe("/api/cart", () => {
 
   test("PATCH /api/cart/product_id => Should return 404 if product is not in cart", () => {
     const cartItem = {
-      quantity: 3,
+      items: ([
+        {
+          quantity: 4000,
+        },
+      ]),
+      updated_at: new Date(),
     };
     return request(app)
-      .patch("/api/cart/3/30")
+      .patch("/api/cart/2/3000")
       .send(cartItem)
       .expect(404)
       .then(({ body }) => {
@@ -176,21 +178,21 @@ describe("/api/cart", () => {
       });
   });
 
-  test("DELETE /api/product/:user_id/:item_id Admin - Should allow admin to delete product", () => {
+  test("DELETE /api/cart/:user_id/:cart_id Admin - Should allow admin to delete product", () => {
     return request(app)
-      .delete("/api/cart/3/3")
+      .delete("/api/cart/3/10")
       .expect(200)
       .then((response) => {
         expect(response.text).toBe("Item Successfully deleted");
       });
   });
 
-  test("DELETE /api/product/:user_id/:item_id Admin - Should return 404 if product doesn’t exist", () => {
+  test("DELETE /api/cart/:user_id/:cart_id Admin - Should return 404 if product doesn’t exist", () => {
     return request(app)
-      .delete("/api/cart/1/1999")
+      .delete("/api/cart/3/1999")
       .expect(404)
       .then(({ body: { msg } }) => {
-        expect(msg).toBe("Product doesn't exist!");
+        expect(msg).toBe("Cart doesn't exist!");
       });
   });
 });

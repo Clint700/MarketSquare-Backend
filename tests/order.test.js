@@ -27,12 +27,17 @@ describe("/api/orders", () => {
         .then(({ body }) => {
           expect(body).toEqual(
             expect.objectContaining({
-              order_id: expect.any(Number),
               user_id: 3,
-              total_cost: expect.any(String), // Use total_amount instead of total_cost
-              status: "pending",
+              full_name: "Alice Wong",
+              items:expect.any(Array),
+              total_amount: 89.97,
+              shipping_cost: 15.0,
+              status: "shipped",
+              payment_status: "paid",
+              shipping_address: expect.any(Object),
+              billing_address: expect.any(Object),
               created_at: expect.any(String),
-              items: expect.any(Array),
+              updated_at: expect.any(String),
             })
           );
         });
@@ -41,17 +46,7 @@ describe("/api/orders", () => {
     test("Should fail if cart is empty", () => {
       return request(app)
         .post("/api/orders")
-        .send({ user_id: 5 })
-        .expect(400)
-        .then(({ body }) => {
-          expect(body.msg).toBe("Cart is empty!");
-        });
-    });
-
-    test("Should fail if product is unavailable", () => {
-      return request(app)
-        .post("/api/orders")
-        .send({ user_id: 3, product_id: 9999 })
+        .send({ user_id: 50000000 })
         .expect(400)
         .then(({ body }) => {
           expect(body.msg).toBe("Cart is empty!");
@@ -62,17 +57,23 @@ describe("/api/orders", () => {
   describe("GET /api/orders/:order_id", () => {
     test("Should return order details", () => {
       return request(app)
-        .get("/api/orders/2")
+        .get("/api/orders/1")
         .send({ user_id: 2 })
         .expect(200)
         .then(({ body }) => {
           expect(body).toEqual(
             expect.objectContaining({
-              order_id: expect.any(Number),
               user_id: 2,
-              total_amount: expect.any(String),
-              status: expect.any(String),
+              full_name: "Jane Doe",
+              items: expect.any(Array),
+              total_amount: 59.98,
+              shipping_cost: 10.0,
+              status: "processing",
+              payment_status: "paid",
+              shipping_address: expect.any(Object),
+              billing_address: expect.any(Object),
               created_at: expect.any(String),
+              updated_at: expect.any(String),
             })
           );
         });
@@ -90,7 +91,7 @@ describe("/api/orders", () => {
 
     test("Should deny access to others’ orders", () => {
       return request(app)
-        .get("/api/orders/2")
+        .get("/api/orders/1")
         .send({ user_id: 3 })
         .expect(404)
         .then(({ body }) => {
@@ -110,10 +111,17 @@ describe("/api/orders", () => {
           body.forEach((order) => {
             expect(order).toEqual(
               expect.objectContaining({
-                order_id: expect.any(Number),
-                user_id: 3,
-                total_amount: expect.any(String),
+                user_id: expect.any(Number),
+                full_name: expect.any(String),
+                items: expect.any(Array),
+                total_amount: expect.any(Number),
+                shipping_cost: expect.any(Number),
                 status: expect.any(String),
+                payment_status: expect.any(String),
+                shipping_address: expect.any(Object),
+                billing_address: expect.any(Object),
+                created_at: expect.any(String),
+                updated_at: expect.any(String),
               })
             );
           });

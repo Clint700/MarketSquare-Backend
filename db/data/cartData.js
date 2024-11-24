@@ -1,6 +1,6 @@
 module.exports = [
   {
-    user_id: 2, // Jane Doe
+    user_id: 2, 
     full_name: 'Jane Doe',
     items: JSON.stringify([
       {
@@ -16,7 +16,7 @@ module.exports = [
     updated_at: new Date()
   },
   {
-    user_id: 3, // Alice Wong
+    user_id: 3, 
     full_name: 'Alice Wong',
     items: JSON.stringify([
       {
@@ -27,20 +27,12 @@ module.exports = [
         total_price: 49.99,
         product_image: 'https://example.com/img2.jpg'
       },
-      {
-        item_id: 4,
-        item_name: 'Yoga Mat',
-        price: 99.99,
-        quantity: 1,
-        total_price: 99.99,
-        product_image: 'https://example.com/img4.jpg'
-      }
     ]),
     created_at: new Date(),
     updated_at: new Date()
   },
   {
-    user_id: 5, // Eve Taylor
+    user_id: 5, 
     full_name: 'Eve Taylor',
     items: JSON.stringify([
       {
@@ -56,7 +48,7 @@ module.exports = [
     updated_at: new Date()
   },
   {
-    user_id: 6, // Mike Brown
+    user_id: 6, 
     full_name: 'Mike Brown',
     items: JSON.stringify([
       {
@@ -72,7 +64,7 @@ module.exports = [
     updated_at: new Date()
   },
   {
-    user_id: 8, // Liam Smith
+    user_id: 8, 
     full_name: 'Liam Smith',
     items: JSON.stringify([
       {
@@ -88,7 +80,7 @@ module.exports = [
     updated_at: new Date()
   },
   {
-    user_id: 10, // Olivia Jones
+    user_id: 10, 
     full_name: 'Olivia Jones',
     items: JSON.stringify([
       {
@@ -104,7 +96,7 @@ module.exports = [
     updated_at: new Date()
   },
   {
-    user_id: 2, // Jane Doe
+    user_id: 2,
     full_name: 'Jane Doe',
     items: JSON.stringify([
       {
@@ -120,7 +112,7 @@ module.exports = [
     updated_at: new Date()
   },
   {
-    user_id: 6, // Mike Brown
+    user_id: 6, 
     full_name: 'Mike Brown',
     items: JSON.stringify([
       {
@@ -136,7 +128,7 @@ module.exports = [
     updated_at: new Date()
   },
   {
-    user_id: 8, // Liam Smith
+    user_id: 8,
     full_name: 'Liam Smith',
     items: JSON.stringify([
       {
@@ -152,7 +144,7 @@ module.exports = [
     updated_at: new Date()
   },
   {
-    user_id: 3, // Alice Wong
+    user_id: 3, 
     full_name: 'Alice Wong',
     items: JSON.stringify([
       {
@@ -168,3 +160,11 @@ module.exports = [
     updated_at: new Date()
   }
 ];
+
+
+
+
+
+
+
+

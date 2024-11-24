@@ -1,119 +1,226 @@
 {
   "base_url": "/api",
   "endpoints": {
-    "/auth": {
-      "POST /login": {
-        "description": "Authenticate and log in a user",
-        "body": { "username": "string", "password": "string" }
-      },
-      "POST /register": {
-        "description": "Register a new user",
-        "body": {
-          "username": "string",
-          "password": "string",
-          "email": "string"
+    "Authentication": {
+      "/auth": {
+        "POST /login": {
+          "Description": "Authenticate and log in a user",
+          "Body": {
+            "username": "string",
+            "password": "string"
+          },
+          "Response": {
+            "user": {
+              "user_id": "integer",
+              "username": "string",
+              "first_name": "string",
+              "last_name": "string",
+              "email": "string",
+              "number": "string",
+              "role": "string"
+            },
+            "token": "string"
+          }
+        },
+        "POST /register": {
+          "Description": "Register a new user",
+          "Body": {
+            "username": "string",
+            "password": "string",
+            "first_name": "string",
+            "last_name": "string",
+            "email": "string",
+            "number": "string",
+            "role": "string",
+            "address": "object",
+            "preferences": "object"
+          },
+          "Response": {
+            "user": "object",
+            "token": "string"
+          }
+        },
+        "GET /me": {
+          "Description": "Get current authenticated user’s details",
+          "Headers": {
+            "Authorization": "Bearer token"
+          },
+          "Response": {
+            "user_id": "integer",
+            "username": "string",
+            "first_name": "string",
+            "last_name": "string",
+            "email": "string",
+            "number": "string",
+            "role": "string"
+          }
         }
-      },
-      "GET /me": {
-        "description": "Get current authenticated user’s details",
-        "headers": { "Authorization": "Bearer token" }
       }
     },
-    "/product": {
-      "POST /": {
-        "description": "Add a new product (Admin only)",
-        "body": {
-          "user_id": "integer",
-          "img_url": "string",
-          "price": "string",
-          "category": "string",
-          "item_name": "string",
-          "item_description": "string"
+    "Products": {
+      "/product": {
+        "POST /": {
+          "Description": "Add a new product (Admin only)",
+          "Body": {
+            "user_id": "integer",
+            "img_url": "string",
+            "price": "string",
+            "stock": "integer",
+            "category": "string",
+            "item_name": "string",
+            "item_description": "string",
+            "dimensions": "object",
+            "rating": "number"
+          }
+        },
+        "PATCH /:item_id": {
+          "Description": "Update a product (Admin only)",
+          "Params": {
+            "item_id": "integer"
+          },
+          "Body": {
+            "img_url": "string",
+            "price": "string",
+            "stock": "integer",
+            "category": "string",
+            "item_name": "string",
+            "item_description": "string",
+            "dimensions": "object",
+            "rating": "number"
+          }
+        },
+        "DELETE /:user_id/:item_id": {
+          "Description": "Delete a product (Admin only)",
+          "Params": {
+            "user_id": "integer",
+            "item_id": "integer"
+          }
+        },
+        "GET /": {
+          "Description": "Get a list of all products",
+          "Query": {
+            "category": "string",
+            "item_name": "string",
+            "price_min": "integer",
+            "price_max": "integer"
+          }
+        },
+        "GET /:item_id": {
+          "Description": "Get product details by ID",
+          "Params": {
+            "item_id": "integer"
+          }
         }
-      },
-      "PATCH /:item_id": {
-        "description": "Update a product (Admin only)",
-        "params": { "item_id": "integer" },
-        "body": {
-          "img_url": "string",
-          "price": "string",
-          "category": "string",
-          "item_name": "string",
-          "item_description": "string"
-        }
-      },
-      "DELETE /:user_id/:item_id": {
-        "description": "Delete a product (Admin only)",
-        "params": { "user_id": "integer", "item_id": "integer" }
-      },
-      "GET /": {
-        "description": "Get a list of all products",
-        "query": {
-          "category": "string",
-          "item_name": "string",
-          "price_min": "integer",
-          "price_max": "integer"
-        }
-      },
-      "GET /:item_id": {
-        "description": "Get product details by ID",
-        "params": { "item_id": "integer" }
       }
     },
-    "/cart": {
-      "POST /:user_id/:item_id": {
-        "description": "Add a product to a user's cart",
-        "params": { "user_id": "integer", "item_id": "integer" },
-        "body": { "quantity": "integer" }
-      },
-      "PATCH /:user_id/:product_id": {
-        "description": "Update product quantity in the cart",
-        "params": { "user_id": "integer", "product_id": "integer" },
-        "body": { "quantity": "integer" }
-      },
-      "GET /:user_id": {
-        "description": "Get the contents of a user's cart",
-        "params": { "user_id": "integer" }
-      },
-      "DELETE /:user_id/:product_id": {
-        "description": "Remove a product from the cart",
-        "params": { "user_id": "integer", "product_id": "integer" }
+    "Cart": {
+      "/cart": {
+        "POST /:user_id/:item_id": {
+          "Description": "Add a product to a user's cart",
+          "Params": {
+            "user_id": "integer",
+            "item_id": "integer"
+          },
+          "Body": {
+            "quantity": "integer"
+          }
+        },
+        "PATCH /:user_id/:product_id": {
+          "Description": "Update product quantity in the cart",
+          "Params": {
+            "user_id": "integer",
+            "product_id": "integer"
+          },
+          "Body": {
+            "quantity": "integer"
+          }
+        },
+        "GET /:user_id": {
+          "Description": "Get the contents of a user's cart",
+          "Params": {
+            "user_id": "integer"
+          }
+        },
+        "DELETE /:user_id/:product_id": {
+          "Description": "Remove a product from the cart",
+          "Params": {
+            "user_id": "integer",
+            "product_id": "integer"
+          }
+        }
       }
     },
-    "/orders": {
-      "POST /": {
-        "description": "Place an order from the user's cart",
-        "body": { "user_id": "integer" }
-      },
-      "GET /:order_id": {
-        "description": "Get details of a specific order",
-        "params": { "order_id": "integer" }
-      },
-      "GET /": {
-        "description": "Get a list of user's orders with optional status filter",
-        "query": { "status": "string" },
-        "headers": { "Authorization": "Bearer token" }
+    "Orders": {
+      "/orders": {
+        "POST /": {
+          "Description": "Place an order from the user's cart",
+          "Body": {
+            "user_id": "integer"
+          }
+        },
+        "GET /:order_id": {
+          "Description": "Get details of a specific order",
+          "Params": {
+            "order_id": "integer"
+          }
+        },
+        "GET /": {
+          "Description": "Get a list of user's orders with optional status filter",
+          "Query": {
+            "status": "string"
+          },
+          "Headers": {
+            "Authorization": "Bearer token"
+          }
+        }
       }
     },
-    "/admin": {
-      "GET /orders": {
-        "description": "Get list of all customer orders (Admin only)",
-        "query": { "status": "string" },
-        "headers": { "Authorization": "Bearer token" }
-      },
-      "PATCH /orders/:order_id": {
-        "description": "Update status of a specific order (Admin only)",
-        "params": { "order_id": "integer" },
-        "body": { "status": "string" },
-        "headers": { "Authorization": "Bearer token" }
-      },
-      "GET /products": {
-        "description": "Get list of all products (Admin only)",
-        "headers": { "Authorization": "Bearer token" }
-      },
-      "GET /users": {
-        "description": "Get list of all users (Admin only)",
-        "headers": { "Authorization": "Bearer token" }
+    "Admin": {
+      "/admin": {
+        "GET /orders": {
+          "Description": "Get list of all customer orders (Admin only)",
+          "Query": {
+            "status": "string"
+          },
+          "Headers": {
+            "Authorization": "Bearer token"
+          }
+        },
+        "GET /orders/:order_id": {
+          "Description": "Get details of a specific order (Admin only)",
+          "Params": {
+            "order_id": "integer"
+          },
+          "Headers": {
+            "Authorization": "Bearer token"
+          }
+        },
+        "PATCH /orders/:order_id": {
+          "Description": "Update the status of a specific order (Admin only)",
+          "Params": {
+            "order_id": "integer"
+          },
+          "Body": {
+            "status": "string",
+            "payment_status": "string",
+            "shipping_cost": "number"
+          },
+          "Headers": {
+            "Authorization": "Bearer token"
+          }
+        },
+        "GET /products": {
+          "Description": "Get a list of all products (Admin only)",
+          "Headers": {
+            "Authorization": "Bearer token"
+          }
+        },
+        "GET /users": {
+          "Description": "Get a list of all users (Admin only)",
+          "Headers": {
+            "Authorization": "Bearer token"
+          }
+        }
       }
     }
   }

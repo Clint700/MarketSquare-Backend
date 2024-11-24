@@ -11,9 +11,9 @@ const hashPassword = (password) => {
   });
 };
 
-const seed = ({ userData, itemsData, ordersData }) => {
+const seed = ({ userData, itemsData, cartData, ordersData }) => {
   return db
-    .query(`DROP TABLE IF EXISTS orders, items, users;`)
+    .query(`DROP TABLE IF EXISTS orders, carts, items, users;`)
     .then(() => {
       return db.query(`
         CREATE TABLE users (
@@ -42,8 +42,20 @@ const seed = ({ userData, itemsData, ordersData }) => {
           category VARCHAR NOT NULL,
           item_name VARCHAR NOT NULL,
           item_description VARCHAR NOT NULL,
-          dimensions JSON NOT NULL,
+          dimensions JSON,
           rating FLOAT
+        );
+      `);
+    })
+    .then(() => {
+      return db.query(`
+        CREATE TABLE carts (
+          cart_id SERIAL PRIMARY KEY,
+          user_id INT REFERENCES users(user_id),
+          full_name VARCHAR(100) NOT NULL,
+          items JSON NOT NULL,
+          created_at TIMESTAMP DEFAULT NOW(),
+          updated_at TIMESTAMP DEFAULT NOW()
         );
       `);
     })
@@ -55,7 +67,6 @@ const seed = ({ userData, itemsData, ordersData }) => {
           full_name VARCHAR(100) NOT NULL,
           items JSON NOT NULL,
           total_amount VARCHAR NOT NULL,
-          tax FLOAT NOT NULL,
           shipping_cost FLOAT NOT NULL,
           status VARCHAR(20) NOT NULL,
           payment_status VARCHAR(20) NOT NULL,
@@ -137,15 +148,30 @@ const seed = ({ userData, itemsData, ordersData }) => {
       return db.query(insertItemsQueryStr);
     })
     .then(() => {
+      const insertCartsQueryStr = format(
+        `INSERT INTO carts (user_id, full_name, items, created_at, updated_at) VALUES %L;`,
+        cartData.map(
+          ({
+            user_id,
+            product_id,
+            full_name,
+            items,
+            created_at,
+            updated_at,
+          }) => [user_id, full_name, items, created_at, updated_at]
+        )
+      );
+      return db.query(insertCartsQueryStr);
+    })
+    .then(() => {
       const insertOrdersQueryStr = format(
-        `INSERT INTO orders (user_id, full_name, items, total_amount, tax, shipping_cost, status, payment_status, shipping_address, billing_address, created_at, updated_at) VALUES %L;`,
+        `INSERT INTO orders (user_id, full_name, items, total_amount, shipping_cost, status, payment_status, shipping_address, billing_address, created_at, updated_at) VALUES %L;`,
         ordersData.map(
           ({
             user_id,
             full_name,
             items,
             total_amount,
-            tax,
             shipping_cost,
             status,
             payment_status,
@@ -158,7 +184,6 @@ const seed = ({ userData, itemsData, ordersData }) => {
             full_name,
             items,
             total_amount,
-            tax,
             shipping_cost,
             status,
             payment_status,

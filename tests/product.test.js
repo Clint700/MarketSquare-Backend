@@ -21,12 +21,15 @@ describe("/api/product", () => {
   test("POST /api/product Admin - Should allow admin to create new product", () => {
     const itemData = {
       user_id: 1,
-      img_url: "https://example.com/img6.jpg",
+      img_url: "https://example.com/img1.jpg",
       created_at: new Date(),
-      price: "59.99",
-      category: "Toys",
-      item_name: "Baby plane",
-      item_description: "Safe and portable baby plane to keep them busy.",
+      price: "39.99",
+      stock: 20,
+      category: "Electronics",
+      item_name: "Bluetooth Charger",
+      item_description: "Portable charger with 2 hours fast charging.",
+      dimensions: { length: "25cm", width: "2cm", height: "10cm" },
+      rating: 4.0,
     };
     return request(app)
       .post("/api/product")
@@ -36,12 +39,15 @@ describe("/api/product", () => {
         expect(response.body).toEqual(
           expect.objectContaining({
             user_id: 1,
-            img_url: "https://example.com/img6.jpg",
+            img_url: "https://example.com/img1.jpg",
             created_at: expect.any(String),
-            price: "59.99",
-            category: "Toys",
-            item_name: "Baby plane",
-            item_description: "Safe and portable baby plane to keep them busy.",
+            price: "39.99",
+            stock: 20,
+            category: "Electronics",
+            item_name: "Bluetooth Charger",
+            item_description: "Portable charger with 2 hours fast charging.",
+            dimensions: { length: "25cm", width: "2cm", height: "10cm" },
+            rating: 4.0,
           })
         );
       });
@@ -67,12 +73,15 @@ describe("/api/product", () => {
   test("POST /api/product Admin - Should deny non-admin", () => {
     const itemData = {
       user_id: 2,
-      img_url: "https://example.com/img6.jpg",
+      img_url: "https://example.com/img1.jpg",
       created_at: new Date(),
-      price: "59.99",
-      category: "Toys",
-      item_name: "Baby plane",
-      item_description: "Safe and portable baby plane to keep them busy.",
+      price: "39.99",
+      stock: 20,
+      category: "Electronics",
+      item_name: "Bluetooth Charger",
+      item_description: "Portable charger with 2 hours fast charging.",
+      dimensions: { length: "25cm", width: "2cm", height: "10cm" },
+      rating: 4.0,
     };
     return request(app)
       .post("/api/product")
@@ -85,29 +94,32 @@ describe("/api/product", () => {
 
   test("PATCH /api/product/:product_id Admin - Should allow admin to update product", () => {
     const itemData = {
-      user_id: 1,
-      img_url: "https://example.com/img10.jpg",
+      img_url: "https://example.com/img1.jpg",
       created_at: new Date(),
-      price: "29.99",
+      price: "99.99",
+      stock: 25,
       category: "Electronics",
-      item_name: "Bluetooth",
-      item_description: "Portable wireless speaker with 15-hour battery life.",
+      item_name: "Bluetooth ear phone",
+      item_description: "Portable ear phone.",
+      dimensions: { length: "5cm", width: "2cm", height: "2cm" },
+      rating: 4.5,
     };
     return request(app)
-      .patch("/api/product/1")
+      .patch("/api/product/1/1")
       .send(itemData)
       .expect(200)
       .then((response) => {
         expect(response.body).toEqual(
           expect.objectContaining({
-            user_id: 1,
-            img_url: "https://example.com/img10.jpg",
+            img_url: "https://example.com/img1.jpg",
             created_at: expect.any(String),
-            price: "29.99",
+            price: "99.99",
+            stock: 25,
             category: "Electronics",
-            item_name: "Bluetooth",
-            item_description:
-              "Portable wireless speaker with 15-hour battery life.",
+            item_name: "Bluetooth ear phone",
+            item_description: "Portable ear phone.",
+            dimensions: { length: "5cm", width: "2cm", height: "2cm" },
+            rating: 4.5,
           })
         );
       });
@@ -115,7 +127,6 @@ describe("/api/product", () => {
 
   test("PATCH /api/product/:product_id Admin - Should return 404 if product doesn’t exist", () => {
     const itemData = {
-      user_id: 1,
       img_url: "https://example.com/img100.jpg",
       created_at: new Date(),
       price: "79.99",
@@ -124,7 +135,7 @@ describe("/api/product", () => {
       item_description: "Portable wireless speaker with 15-hour battery life.",
     };
     return request(app)
-      .patch("/api/product/1999")
+      .patch("/api/product/1/1999")
       .send(itemData)
       .expect(404)
       .then(({ body: { msg } }) => {
@@ -132,9 +143,8 @@ describe("/api/product", () => {
       });
   });
 
-  test("PATCH /api/product/:product_id Admin - Should return 404 if product doesn’t exist", () => {
+  test("PATCH /api/product/:product_id Admin - Should return 404 if not admin", () => {
     const itemData = {
-      user_id: 2,
       img_url: "https://example.com/img100.jpg",
       created_at: new Date(),
       price: "79.99",
@@ -143,7 +153,7 @@ describe("/api/product", () => {
       item_description: "Portable wireless speaker with 15-hour battery life.",
     };
     return request(app)
-      .patch("/api/product/2")
+      .patch("/api/product/2/2")
       .send(itemData)
       .expect(400)
       .then(({ body: { msg } }) => {
@@ -276,9 +286,12 @@ describe("/api/product", () => {
             img_url: 'https://example.com/img4.jpg',
             created_at: expect.any(String),
             price: '99.99',
+            stock: 20,
             category: 'Fitness',
             item_name: 'Yoga Mat',
-            item_description: 'Non-slip yoga mat with carrying strap.'
+            item_description: 'Non-slip yoga mat with carrying strap.',
+            dimensions: { length: '180cm', width: '60cm', height: '0.5cm' },
+            rating: 4.8
           })
         );
       });
@@ -286,7 +299,7 @@ describe("/api/product", () => {
 
   test("GET /api/product/:product_id => Should return 404 if product does not exist", () => {
     return request(app)
-      .get("/api/product/6")
+      .get("/api/product/60")
       .expect(404)
       .then(({ body }) => {
         expect(body.msg).toBe("Product doesn't exist!");

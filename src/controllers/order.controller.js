@@ -1,17 +1,14 @@
-const { placeOrder, getOrderById, getOrders } = require("../models/order.model");
+const {
+  placeOrder,
+  getOrderById,
+  getOrders,
+} = require("../models/order.model");
 
 exports.postOrder = (req, res, next) => {
   const { user_id } = req.body;
   placeOrder(user_id)
     .then((order) => {
-      res.status(201).send({
-        order_id: order.order_id,
-        user_id: order.user_id,
-        total_cost: order.total_amount,
-        status: order.status,
-        created_at: order.created_at,
-        items: order.items,
-      });
+      res.status(201).send(order);
     })
     .catch(next);
 };
