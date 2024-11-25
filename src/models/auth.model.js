@@ -63,8 +63,8 @@ exports.postRegisteredUser = (
           email,
           number,
           role,
-          address,
-          preferences,
+          JSON.stringify(address),
+          JSON.stringify(preferences),
         ]
       );
     })
