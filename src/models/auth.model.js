@@ -30,8 +30,7 @@ exports.verifyPassword = (plainTextPassword, hashedPassword) => {
 exports.postRegisteredUser = (
   username,
   password,
-  first_name,
-  last_name,
+  full_name,
   email,
   number,
   role,
@@ -54,18 +53,8 @@ exports.postRegisteredUser = (
     })
     .then((hashedPassword) => {
       return db.query(
-        "INSERT INTO users (username, password, first_name, last_name, email, number, role, address, preferences) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *",
-        [
-          username,
-          hashedPassword,
-          first_name,
-          last_name,
-          email,
-          number,
-          role,
-          address,
-          preferences,
-        ]
+        "INSERT INTO users (username, password, full_name, email, number, role, address, preferences) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *",
+        [username, hashedPassword, full_name, email, number, role, address, preferences]
       );
     })
     .then(({ rows }) => {

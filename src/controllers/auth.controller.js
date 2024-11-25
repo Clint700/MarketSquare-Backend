@@ -28,8 +28,7 @@ exports.registerUser = (req, res, next) => {
   const {
     username,
     password,
-    first_name,
-    last_name,
+    full_name,
     email,
     number,
     role,
@@ -37,23 +36,14 @@ exports.registerUser = (req, res, next) => {
     preferences,
   } = req.body;
 
-  if (
-    !username ||
-    !password ||
-    !first_name ||
-    !last_name ||
-    !email ||
-    !number ||
-    !role
-  ) {
+  if (!username || !password || !full_name || !email || !number || !role) {
     return res.status(400).send({ msg: "Missing field required" });
   }
 
   postRegisteredUser(
     username,
     password,
-    first_name,
-    last_name,
+    full_name,
     email,
     number,
     role,

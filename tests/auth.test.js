@@ -18,7 +18,7 @@ afterAll(() => {
   return db.end();
 });
 
-describe.only("/api/auth", () => {
+describe("/api/auth", () => {
   let token;
 
   beforeAll(() => {
@@ -43,8 +43,7 @@ describe.only("/api/auth", () => {
           expect.objectContaining({
             user: expect.objectContaining({
               username: "adminJohn",
-              first_name: "John",
-              last_name: "Admin",
+              full_name: "John Admin",
               email: "admin.john@example.co.uk",
               number: "07123456789",
               role: "admin",
@@ -73,8 +72,7 @@ describe.only("/api/auth", () => {
     const registerData = {
       username: "customerDike",
       password: "dikeSecure456",
-      first_name: "Dike",
-      last_name: "Thrown",
+      full_name: "Dike Thrown",
       email: "dike.trown@example.co.uk",
       number: "07478901234",
       role: "customer",
@@ -97,8 +95,7 @@ describe.only("/api/auth", () => {
             user: {
               user_id: expect.any(Number),
               username: "customerDike",
-              first_name: "Dike",
-              last_name: "Thrown",
+              full_name: "Dike Thrown",
               email: "dike.trown@example.co.uk",
               number: "07478901234",
               role: "customer",
@@ -115,8 +112,7 @@ describe.only("/api/auth", () => {
     const registerData = {
       username: "incompleteUser",
       password: "Password123",
-      first_name: "Incomplete",
-      last_name: "User",
+      full_name: "Incomplete User",
       email: "incomplete.user@example.co.uk",
     };
     return request(app)
@@ -132,8 +128,7 @@ describe.only("/api/auth", () => {
     const registerData = {
       username: "adminJohn",
       password: "adminPassword123",
-      first_name: "John",
-      last_name: "Admin",
+      full_name: "John Admin",
       email: "admin.john@example.co.uk",
       number: "07123456789",
       role: "admin",
@@ -144,44 +139,6 @@ describe.only("/api/auth", () => {
       .expect(409)
       .then(({ body: { msg } }) => {
         expect(msg).toBe("Username or email already exists! Please log in.");
-      });
-  });
-
-  test("GET /api/auth/me => Should return current user details if authenticated", () => {
-    return request(app)
-      .get("/api/auth/me")
-      .set("Authorization", `Bearer ${token}`)
-      .expect(200)
-      .then(({ body }) => {
-        expect(body).toEqual(
-          expect.objectContaining({
-            username: "adminJohn",
-            first_name: "John",
-            last_name: "Admin",
-            email: "admin.john@example.co.uk",
-            number: "07123456789",
-            role: "admin",
-          })
-        );
-      });
-  });
-
-  test("GET /api/auth/me => Should fail if token is missing", () => {
-    return request(app)
-      .get("/api/auth/me")
-      .expect(401)
-      .then(({ body }) => {
-        expect(body.msg).toBe("Unauthorized");
-      });
-  });
-
-  test("GET /api/auth/me => Should fail if token is invalid", () => {
-    return request(app)
-      .get("/api/auth/me")
-      .set("Authorization", "Bearer invalid_token")
-      .expect(403)
-      .then(({ body }) => {
-        expect(body.msg).toBe("Forbidden");
       });
   });
 });

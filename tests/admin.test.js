@@ -230,8 +230,7 @@ describe.only("/api/admin", () => {
               expect.objectContaining({
                 username: expect.any(String),
                 password: expect.any(String),
-                first_name: expect.any(String),
-                last_name: expect.any(String),
+                full_name: expect.any(String),
                 email: expect.any(String),
                 number: expect.any(String),
                 role: expect.any(String),
